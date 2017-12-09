@@ -14,11 +14,13 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  socket.emit('username request', `Oh, hey there. What's your name?`);
+
+  socket.emit('admin', `Oh, hey there. What's your name?`);
 
   socket.on('name declaration', (name)=> {
     users.push(name);
-  })
+    io.emit('admin', `Hello, ${name} ;) ❤︎`)
+  });
 
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);

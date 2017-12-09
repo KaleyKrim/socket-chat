@@ -12,7 +12,6 @@ form.addEventListener('submit', function(event){
   if(!username){
     username = text;
     socket.emit('name declaration', text);
-    socket.emit('chat message', username + ': ' + text);
     document.forms[0][0].value='';
   }else{
     socket.emit('chat message', username + ': ' + text);
@@ -26,9 +25,9 @@ socket.on('chat message', function(msg){
   messages.appendChild(newMessage);
 });
 
-socket.on('username request', function(request){
+socket.on('admin', function(comment){
   var question = document.createElement('li');
   question.className = 'admin';
-  question.innerHTML = request;
+  question.innerHTML = comment;
   messages.appendChild(question);
 });
