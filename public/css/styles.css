@@ -8,6 +8,10 @@ body {
   font: 13px Helvetica, Arial;
 }
 
+.admin{
+  color: red;
+}
+
 form {
   background: #000;
   padding: 3px;
