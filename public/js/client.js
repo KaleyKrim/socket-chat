@@ -10,6 +10,11 @@ var username;
 
 var users = {};
 
+function updateScroll(){
+    var element = document.getElementById("chat");
+    element.scrollTop = element.scrollHeight;
+}
+
 form.addEventListener('submit', function(event){
   event.preventDefault();
   var text = document.forms[0][0].value;
@@ -24,6 +29,7 @@ form.addEventListener('submit', function(event){
 });
 
 socket.on('users', function(users){
+  users = users;
   if (Object.keys(users).length > 1){
     number.innerHTML =  'There are currently ' + Object.keys(users).length.toString() + ' people chatting.';
   }else{
@@ -35,6 +41,7 @@ socket.on('chat message', function(msg){
   var newMessage = document.createElement('li');
   newMessage.innerHTML = msg;
   messages.appendChild(newMessage);
+  updateScroll();
 });
 
 socket.on('admin', function(comment){
