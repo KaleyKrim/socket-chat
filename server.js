@@ -20,8 +20,18 @@ io.on('connection', (socket) => {
   socket.emit('admin', `Oh, hey there. What's your name?`);
 
   socket.on('name declaration', (name)=> {
-    users[socket.id] = name;
-    io.emit('admin', `Hello, ${name} ;) ❤︎`);
+
+    var vals = Object.keys(users).map(function(key) {
+      return users[key];
+    });
+
+    if(vals.indexOf(name.toLowerCase()) >= 0){
+      socket.emit('admin', `You can't be ${name}, the REAL ${name} is already here chatting. Who are you REALLY?`);
+    }else{
+      users[socket.id] = name.toLowerCase();
+      socket.emit('setName', name);
+      io.emit('admin', `Hello, ${name} ;) ❤︎`);
+    }
   });
 
   socket.on('chat message', (msg) => {

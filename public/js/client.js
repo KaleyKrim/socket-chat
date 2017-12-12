@@ -19,7 +19,6 @@ form.addEventListener('submit', function(event){
   event.preventDefault();
   var text = document.forms[0][0].value;
   if(!username){
-    username = text;
     socket.emit('name declaration', text);
     document.forms[0][0].value='';
   }else{
@@ -28,12 +27,16 @@ form.addEventListener('submit', function(event){
   }
 });
 
+socket.on('setName', function(name){
+  username = name;
+})
+
 socket.on('users', function(users){
   users = users;
   if (Object.keys(users).length > 1){
     number.innerHTML =  'There are currently ' + Object.keys(users).length.toString() + ' people chatting.';
   }else{
-    number.innerHTML = 'There is currently ' + Object.keys(users).length.toString() + ' person chatting ;(';
+    number.innerHTML = 'You are the only one here. Sry ;(';
   }
 })
 
