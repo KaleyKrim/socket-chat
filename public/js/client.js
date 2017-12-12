@@ -3,7 +3,6 @@ var socket = io.connect("http://localhost:8080/");
 var messages = document.getElementById('messages');
 var form = document.getElementById('form');
 var val = document.getElementById('m');
-
 var number = document.getElementById('users');
 
 var username;
