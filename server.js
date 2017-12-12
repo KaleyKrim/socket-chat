@@ -4,7 +4,7 @@ const http = require('http').Server(app);
 const port = process.env.port || 8080;
 const io = require('socket.io')(http);
 const path = require('path');
-const users = [];
+const users = {};
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -15,11 +15,13 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
 
+  users[socket.id] = null;
+  io.emit('users', users);
   socket.emit('admin', `Oh, hey there. What's your name?`);
 
   socket.on('name declaration', (name)=> {
-    users.push(name);
-    io.emit('admin', `Hello, ${name} ;) ❤︎`)
+    users[socket.id] = name;
+    io.emit('admin', `Hello, ${name} ;) ❤︎`);
   });
 
   socket.on('chat message', (msg) => {
@@ -27,6 +29,7 @@ io.on('connection', (socket) => {
   });
   console.log('user connected!!');
   socket.on('disconnect', () => {
+    delete users[socket.id];
     console.log('user disconnected');
   });
 })

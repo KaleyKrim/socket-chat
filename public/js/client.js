@@ -4,7 +4,11 @@ var messages = document.getElementById('messages');
 var form = document.getElementById('form');
 var val = document.getElementById('m');
 
+var number = document.getElementById('users');
+
 var username;
+
+var users = {};
 
 form.addEventListener('submit', function(event){
   event.preventDefault();
@@ -18,6 +22,14 @@ form.addEventListener('submit', function(event){
     document.forms[0][0].value='';
   }
 });
+
+socket.on('users', function(users){
+  if (Object.keys(users).length > 1){
+    number.innerHTML =  'There are currently ' + Object.keys(users).length.toString() + ' people chatting.';
+  }else{
+    number.innerHTML = 'There is currently ' + Object.keys(users).length.toString() + ' person chatting ;(';
+  }
+})
 
 socket.on('chat message', function(msg){
   var newMessage = document.createElement('li');
