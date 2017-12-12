@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
 
   socket.on('name declaration', (name)=> {
 
-    var vals = Object.keys(users).map(function(key) {
+    let vals = Object.keys(users).map(function(key) {
       return users[key];
     });
 
@@ -37,6 +37,7 @@ io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
+
   console.log('user connected!!');
   socket.on('disconnect', () => {
     delete users[socket.id];

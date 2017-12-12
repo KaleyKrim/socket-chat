@@ -10,11 +10,6 @@ var username;
 
 var users = {};
 
-function updateScroll(){
-    var element = document.getElementById("chat");
-    element.scrollTop = element.scrollHeight;
-}
-
 form.addEventListener('submit', function(event){
   event.preventDefault();
   var text = document.forms[0][0].value;
@@ -40,16 +35,11 @@ socket.on('users', function(users){
   }
 })
 
-socket.on('chat message', function(msg){
-  var newMessage = document.createElement('li');
-  newMessage.innerHTML = msg;
-  messages.appendChild(newMessage);
+socket.on('chat message', function(message){
+  postMessage(message, 'user-msg');
   updateScroll();
 });
 
-socket.on('admin', function(comment){
-  var question = document.createElement('li');
-  question.className = 'admin';
-  question.innerHTML = comment;
-  messages.appendChild(question);
+socket.on('admin', function(message){
+  postMessage(message, 'admin');
 });
