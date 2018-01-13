@@ -7,17 +7,14 @@
   <body>
     <div id="webcam">
       <video autoplay></video>
+      <video id="receivedVideo"></video>
+
       <div id="canvas-div">
         <img src="">
       </div>
-        <canvas style="display:none;"></canvas>
+      <canvas style="display:none;"></canvas>
     </div>
     <div id="content">
-      <video autoplay></video>
-      <div id="canvas-div">
-        <img src="">
-      </div>
-        <canvas style="display:none;"></canvas>
       <div id="chat">
         <ul id="messages">
           <li id="users"></li>
@@ -26,7 +23,6 @@
       <form id="form" action="">
         <input id="m" name="msg" autocomplete="off" /><button>Send</button>
       </form>
-
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/lib.js"></script>

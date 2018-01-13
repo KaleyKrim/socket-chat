@@ -17,11 +17,11 @@ io.on('connection', (socket) => {
 
   socket.on('name declaration', (name)=> {
 
-    let vals = Object.keys(users).map(function(key) {
+    let currentUsers = Object.keys(users).map(function(key) {
       return users[key];
     });
 
-    if(vals.indexOf(name.toLowerCase()) >= 0){
+    if(currentUsers.indexOf(name.toLowerCase()) >= 0){
       socket.emit('admin', `You can't be ${name}, the REAL ${name} is already here chatting. Who are you REALLY?`);
     }else{
       users[socket.id] = name.toLowerCase();
@@ -35,6 +35,11 @@ io.on('connection', (socket) => {
   });
 
   console.log('user connected!!');
+
+  socket.on('stream', (image) => {
+    io.emit('stream', image);
+  })
+
   socket.on('disconnect', () => {
     delete users[socket.id];
     io.emit('users', users);
