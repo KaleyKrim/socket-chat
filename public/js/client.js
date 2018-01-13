@@ -16,14 +16,14 @@ var localMediaStream = null;
 var receivedVideo = document.getElementById('receivedVideo');
 
 var username;
-
-var users = {};
+var users = [];
+var userCount;
 
 form.addEventListener('submit', function(event){
   event.preventDefault();
-  var text = document.forms[0][0].value;
+  var name = document.forms[0][0].value;
   if(!username){
-    socket.emit('name declaration', text);
+    socket.emit('add user', name);
     document.forms[0][0].value='';
   }else{
     socket.emit('chat message', username + ': ' + text);
@@ -31,18 +31,19 @@ form.addEventListener('submit', function(event){
   }
 });
 
-socket.on('setName', function(name){
+socket.on('set name', function(name){
   username = name;
-})
+});
 
-socket.on('users', function(users){
-  users = users;
-  if (Object.keys(users).length > 1){
-    number.innerHTML =  'There are currently ' + Object.keys(users).length.toString() + ' people chatting.';
-  }else{
-    number.innerHTML = 'You are the only one here. Sry ;(';
-  }
-})
+socket.on('login', function(userData){
+  users.push(userData.username);
+  userCount = userData.userCount;
+});
+
+socket.on('logout', function(userData){
+  users.splice(users.indexOf(userData.username), 1);
+  userCount = userData.userCount;
+});
 
 socket.on('chat message', function(message){
   postMessage(message, 'user-msg');
@@ -58,23 +59,9 @@ socket.on('stream', function(data) {
   receivedVideo.src = data;
 });
 
-function onStream(stream) {
-  receivedVideo.src = URL.createObjectURL(stream);
-  receivedVideo.addEventListener('error', function() {
-    stream.stop();
-  });
-}
-
-var errorCallback = function(e) {
-  console.log('Error!', e);
-};
-
 navigator.getUserMedia({video: true, audio: true}, function(localMediaStream) {
   var video = document.querySelector('video');
   video.src = window.URL.createObjectURL(localMediaStream);
   socket.emit('stream', window.URL.createObjectURL(localMediaStream));
 
-  video.onloadedmetadata = function(e) {
-
-  };
 }, errorCallback);

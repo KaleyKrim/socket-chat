@@ -6,6 +6,10 @@ function postMessage(message, className){
 }
 
 function updateScroll(){
-    var element = document.getElementById("chat");
-    element.scrollTop = element.scrollHeight;
+  var element = document.getElementById("chat");
+  element.scrollTop = element.scrollHeight;
 }
+
+function errorCallback(e) {
+  console.log('Error!', e);
+};
