@@ -1,6 +1,6 @@
-# socket-chat
+# socket-chat:speech_balloon:
 
-A simple browser chat built with Node.js, Express, HTML5, and Socket.io.
+A simple browser chat built with Node.js, Express, HTML5, and Socket.io✨
 
 To do:
 
