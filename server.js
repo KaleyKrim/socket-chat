@@ -33,7 +33,6 @@ io.on('connection', (socket) => {
         userCount : userCount,
         username: socket.username
       });
-      // io.emit('admin', `Hello, ${name} ;) ❤︎`);
     }
   });
 
@@ -44,7 +43,7 @@ io.on('connection', (socket) => {
   console.log('user connected!!');
 
   socket.on('stream', (video) => {
-    io.emit('stream', video);
+    socket.broadcast.emit('stream', video);
   })
 
   socket.on('disconnect', () => {
@@ -59,5 +58,5 @@ io.on('connection', (socket) => {
 })
 
 http.listen(port, () => {
-  console.log(`Server listening on ${port}`)
+  console.log(`Server listening on ${port}`);
 });
