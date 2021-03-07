@@ -37,14 +37,14 @@ export class ChatServer {
 	}
   
 	private broadcastUsers() {
-	  this.emitBroadcastEvent('users', this.usernameMap);
+	  this.emitBroadcastEvent<UsernameMap>('users', this.usernameMap);
 	}
   
-	private emitBroadcastEvent(eventType: string, content: any) {
+	private emitBroadcastEvent<T>(eventType: string, content: T) {
 	  this.socketServer.emit(eventType, content);
 	}
   
-	private emitSocketEvent(socket: socketIo.Socket, eventType: string, content: any) {
+	private emitSocketEvent<T>(socket: socketIo.Socket, eventType: string, content: T) {
 	  socket.emit(eventType, content);
 	}
 
