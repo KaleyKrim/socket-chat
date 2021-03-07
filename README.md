@@ -1,11 +1,13 @@
-# socket-chat:speech_balloon:
+# socket-chat
 
-A simple browser chat built with Node.js, Express, HTML5, and Socket.io✨
+A simple browser chat built with Typescript and Socket.io
 
-To do:
+# How to run
 
-:mushroom:UI
-<br />
-:mushroom:Add video
-<br />
-:mushroom:Add voice recognition
+```bash
+npm i
+```
+
+```bash
+npm run start
+```
