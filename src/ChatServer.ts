@@ -2,7 +2,7 @@ import socketIo from 'socket.io';
 import { Server } from 'http';
 
 interface UsernameMap {
-	[sockerId: string]: string | null;
+	[socketId: string]: string | null;
   }
   
 enum SocketEvents {
@@ -17,12 +17,15 @@ export class ChatServer {
 	private usernameMap: UsernameMap = {};
 	private socketServer: SocketIO.Server;
   
-	constructor(httpServer: Server){
+	constructor(private httpServer: Server){
 	  this.socketServer = socketIo(httpServer);
 	}
   
-	init() {
+	listen(port: number) {
 	  this.setupChatServer();
+	  this.httpServer.listen(port, () => {
+		console.log(`Chat server listening on ${port}`)
+	  }); 
 	}
   
 	private setUser(socketId: string, name: string | null) {
