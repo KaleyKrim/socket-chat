@@ -44,37 +44,50 @@ export class ChatServer {
 	private emitSocketEvent(socket: socketIo.Socket, eventType: string, content: any) {
 	  socket.emit(eventType, content);
 	}
+
+	private registerRegistrationEvent(socket: socketIo.Socket) {
+		socket.on(SocketEvents.Registration, (name: string)=> {
+			const userNames = Object.values(this.usernameMap);
+			const lowercasedName = name.toLowerCase();
+
+			if(userNames.includes(lowercasedName)) {
+				this.emitSocketEvent(socket, SocketEvents.Admin, `You can't be ${name}, the REAL ${name} is already here chatting. Who are you REALLY?`);
+				return;
+			}
+
+			this.setUser(socket.id, lowercasedName);
+			this.emitSocketEvent(socket, SocketEvents.ApproveName, name);
+			this.emitBroadcastEvent('admin', `Hello, ${name} ;) ❤︎`);
+		});
+	}
+
+	private registerChatMessageEvent(socket: socketIo.Socket) {
+		socket.on(SocketEvents.ChatMessage, (msg: string) => {
+			this.emitBroadcastEvent(SocketEvents.ChatMessage, msg)
+		});
+	}
+
+	private registerDisconnectEvent(socket: socketIo.Socket) {
+		socket.on(SocketEvents.Disconnect, () => {
+			this.deleteUser(socket.id);
+			this.broadcastUsers();
+			console.log('user disconnected');
+		});
+	}
+
+	private registerSocketEvents(socket: socketIo.Socket) {
+		this.registerRegistrationEvent(socket);
+		this.registerChatMessageEvent(socket);
+		this.registerDisconnectEvent(socket);
+	}
   
 	private setupChatServer() {
-	  this.socketServer.on('connection', (socket) => {
-		this.setUser(socket.id, null);
-		this.broadcastUsers();
-		this.emitSocketEvent(socket, SocketEvents.Admin, 'Oh, hey there. What\'s your name?');
-	
-		socket.on(SocketEvents.Registration, (name: string)=> {
-  
-		  const userNames = Object.values(this.usernameMap);
-		  const lowercasedName = name.toLowerCase();
-  
-		  if(userNames.includes(lowercasedName)) {
-			this.emitSocketEvent(socket, SocketEvents.Admin, `You can't be ${name}, the REAL ${name} is already here chatting. Who are you REALLY?`);
-			return;
-		  }
-  
-		  this.setUser(socket.id, lowercasedName);
-		  this.emitSocketEvent(socket, SocketEvents.ApproveName, name);
-		  this.emitBroadcastEvent('admin', `Hello, ${name} ;) ❤︎`);
+		this.socketServer.on('connection', (socket) => {
+			this.registerSocketEvents(socket);
+
+			this.setUser(socket.id, null);
+			this.broadcastUsers();
+			this.emitSocketEvent(socket, SocketEvents.Admin, 'Oh, hey there. What\'s your name?');
 		});
-  
-		socket.on(SocketEvents.ChatMessage, (msg: string) => {
-		  this.emitBroadcastEvent(SocketEvents.ChatMessage, msg)
-		});
-  
-		socket.on(SocketEvents.Disconnect, () => {
-		  this.deleteUser(socket.id);
-		  this.broadcastUsers();
-		  console.log('user disconnected');
-		});
-	  });
 	}
 }
