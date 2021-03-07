@@ -11,6 +11,7 @@ enum SocketEvents {
 	ChatMessage = 'chatMessage', //chat message
 	Disconnect = 'disconnect',
 	Admin = 'admin',
+	Users = 'users',
 }
 
 export class ChatServer {
@@ -37,7 +38,7 @@ export class ChatServer {
 	}
   
 	private broadcastUsers() {
-	  this.emitBroadcastEvent<UsernameMap>('users', this.usernameMap);
+	  this.emitBroadcastEvent<UsernameMap>(SocketEvents.Users, this.usernameMap);
 	}
   
 	private emitBroadcastEvent<T>(eventType: string, content: T) {
@@ -66,7 +67,7 @@ export class ChatServer {
 
 	private registerChatMessageEvent(socket: socketIo.Socket) {
 		socket.on(SocketEvents.ChatMessage, (msg: string) => {
-			this.emitBroadcastEvent(SocketEvents.ChatMessage, msg)
+			this.emitBroadcastEvent(SocketEvents.ChatMessage, msg);
 		});
 	}
 

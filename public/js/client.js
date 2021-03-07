@@ -1,44 +1,44 @@
-var socket = io.connect("http://localhost:8080/");
+const socket = io.connect("http://localhost:8080/");
 
-var messages = document.getElementById('messages');
-var form = document.getElementById('form');
-var val = document.getElementById('m');
-var number = document.getElementById('users');
+const form = document.getElementById('form');
+const chatInput = document.getElementById('message-input');
+const number = document.getElementById('users');
 
-var username;
+let username;
 
-var users = {};
+const users = {};
 
 form.addEventListener('submit', function(event){
   event.preventDefault();
-  var text = document.forms[0][0].value;
-  if(!username){
-    socket.emit('name declaration', text);
-    document.forms[0][0].value='';
-  }else{
-    socket.emit('chat message', username + ': ' + text);
-    document.forms[0][0].value='';
+  const input = chatInput.value;
+
+  if(!username) {
+    socket.emit('registration', input);
+    chatInput.value='';
+    return;
   }
+
+  socket.emit('chatMessage', `${username}: ${input}`);
+  chatInput.value='';
 });
 
-socket.on('setName', function(name){
+socket.on('approveName', ((name) => {
   username = name;
-})
+}));
 
-socket.on('users', function(users){
+socket.on('users', ((users) => {
   users = users;
-  if (Object.keys(users).length > 1){
-    number.innerHTML =  'There are currently ' + Object.keys(users).length.toString() + ' people chatting.';
-  }else{
-    number.innerHTML = 'You are the only one here. Sry ;(';
-  }
-})
 
-socket.on('chat message', function(message){
-  postMessage(message, 'user-msg');
+  const userNum = Object.keys(users).length;
+  const userNumDisplay = `There ${userNum === 1 ? 'is' : 'are'} currently ${userNum} ${userNum === 1 ? 'person' : 'people'} chatting.`;
+  number.innerHTML = userNumDisplay;
+}));
+
+socket.on('chatMessage', ((message) => {
+  displayMessage(message, 'user-msg');
   updateScroll();
-});
+}));
 
-socket.on('admin', function(message){
-  postMessage(message, 'admin');
-});
+socket.on('admin', ((message) => {
+  displayMessage(message, 'admin');
+}));
