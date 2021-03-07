@@ -1,11 +1,13 @@
-function postMessage(message, className){
-  var newMessage = document.createElement('li');
+const messages = document.getElementById('messages');
+let chatElement = document.getElementById("chat");
+
+function displayMessage(message, className) {
+  let newMessage = document.createElement('li');
   newMessage.className = className;
   newMessage.innerHTML = message;
   messages.appendChild(newMessage);
 }
 
 function updateScroll(){
-    var element = document.getElementById("chat");
-    element.scrollTop = element.scrollHeight;
+  chatElement.scrollTop = chatElement.scrollHeight;
 }
